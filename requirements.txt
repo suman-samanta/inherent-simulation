@@ -46,7 +46,7 @@ crcmod==1.7
 cufflinks==0.17.3
 cupy-cuda101==9.1.0
 cvxopt==1.2.6
-cvxpy==1.0.31
+cvxpy==1.1.15
 cycler==0.10.0
 cymem==2.0.5
 Cython==0.29.23
