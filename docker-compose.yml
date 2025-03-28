@@ -1,0 +1,8 @@
+services:
+  fenics_sim:
+    build: .
+    container_name: fenics_sim_container
+    volumes:
+      - .:/app
+    working_dir: /app
+    tty: true
