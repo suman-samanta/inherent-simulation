@@ -20,8 +20,9 @@ RUN apt-get update && \
     petsc-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Upgrade pip and install skbuild (aka scikit-build)
-RUN pip3 install --upgrade pip && pip3 install scikit-build
+# Upgrade pip and install scikit-build (aka scikit-build)
+RUN pip3 install --upgrade pip && \
+    pip3 install scikit-build
 
 # Install Python dependencies from requirements.txt
 COPY requirements.txt /app/
@@ -29,6 +30,9 @@ RUN pip3 install --no-cache-dir -r /app/requirements.txt
 
 # Install sympy (required for some parts of FEniCS)
 RUN pip3 install --no-cache-dir --upgrade sympy
+
+# Install spaCy model (if you have en-core-web-sm in requirements)
+RUN python3 -m spacy download en-core-web-sm
 
 # Set the working directory to /app
 WORKDIR /app
@@ -38,4 +42,3 @@ COPY . /app
 
 # Default command to run the Python script
 CMD ["python3", "my_inherentstrain_draft.py"]
- 
