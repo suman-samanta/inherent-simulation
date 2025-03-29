@@ -1,10 +1,10 @@
-# Use the official Ubuntu base image
-FROM ubuntu:20.04
+# Use the official FEniCS stable image as the base
+FROM fenics/stable:latest
 
-# Avoid interactive prompts during installation
+# Set environment variables to avoid interactive prompts during installation
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install required system dependencies for FEniCS and other libraries
+# Install additional dependencies that may be needed for your application
 RUN apt-get update && \
     apt-get install -y \
     software-properties-common \
