@@ -1,5 +1,5 @@
-# Use the official FEniCS stable image as the base
-FROM fenicsproject/test-env
+# Use the official Ubuntu base image
+FROM ubuntu:20.04
 
 # Avoid interactive prompts during installation
 ENV DEBIAN_FRONTEND=noninteractive
