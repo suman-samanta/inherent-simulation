@@ -1,5 +1,5 @@
 # Use the official FEniCS stable image as the base
-FROM fenics/stable:2021.1  # You can replace "latest" with a specific version tag like "2021.1"
+FROM fenics/stable:2021.1
 
 # Avoid interactive prompts during installation
 ENV DEBIAN_FRONTEND=noninteractive
