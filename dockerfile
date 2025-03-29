@@ -1,10 +1,10 @@
 # Use the official FEniCS stable image as the base
 FROM fenics/stable:latest
 
-# Set environment variables to avoid interactive prompts during installation
+# Avoid interactive prompts during installation
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install additional dependencies that may be needed for your application
+# Install additional system dependencies required for FEniCS and Dolfin
 RUN apt-get update && \
     apt-get install -y \
     software-properties-common \
@@ -18,13 +18,22 @@ RUN apt-get update && \
     git \
     cmake \
     petsc-dev \
+    gfortran \
+    libblas-dev \
+    liblapack-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Upgrade pip and install scikit-build (aka scikit-build)
-RUN pip3 install --upgrade pip && \
-    pip3 install scikit-build
+# Upgrade pip
+RUN pip3 install --upgrade pip
 
-# Install Python dependencies from requirements.txt
+# Install FEniCS dependencies (specific versions)
+RUN pip3 install fenics-dijitso==2019.2.0.dev0 \
+    fenics-dolfin==2019.2.0.dev0 \
+    fenics-ffc==2019.2.0.dev0 \
+    fenics-fiat==2019.2.0.dev0 \
+    fenics-ufl==2019.2.0.dev0
+
+# If you have additional Python dependencies in requirements.txt, install them
 COPY requirements.txt /app/
 RUN pip3 install --no-cache-dir -r /app/requirements.txt
 
@@ -37,8 +46,8 @@ RUN python3 -m spacy download en-core-web-sm
 # Set the working directory to /app
 WORKDIR /app
 
-# Copy all files to /app in the container
+# Copy the rest of your files to the container
 COPY . /app
 
-# Default command to run the Python script
+# Default command to run the Python script (adjust this based on your entry script)
 CMD ["python3", "my_inherentstrain_draft.py"]
