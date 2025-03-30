@@ -5,7 +5,8 @@ FROM stnb/fenics:latest
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Update system and install additional system dependencies that might be necessary
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && \
+    apt-get install -y \
     build-essential \
     libopenmpi-dev \
     libeigen3-dev \
@@ -16,9 +17,9 @@ RUN apt-get update && apt-get install -y \
     python3-pip \
     libhdf5-serial-dev \
     libblas-dev \
-    liblapack-dev \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    liblapack-dev && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # Set the working directory in the Docker container
 WORKDIR /app
@@ -27,7 +28,8 @@ WORKDIR /app
 COPY requirements.txt /app/
 
 # Install Python dependencies from requirements.txt
-RUN pip3 install --no-cache-dir -r requirements.txt
+RUN pip3 install --upgrade pip && \
+    pip3 install --no-cache-dir -r requirements.txt
 
 # Copy your FEniCS application code into the Docker container
 COPY . /app
