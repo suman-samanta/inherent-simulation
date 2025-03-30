@@ -32,8 +32,9 @@ WORKDIR /app
 # Copy the requirements.txt file to the container
 COPY requirements.txt /app/
 
-# Upgrade pip and install Python dependencies from requirements.txt
+# Upgrade pip and install skbuild before other Python dependencies
 RUN pip3 install --upgrade pip && \
+    pip3 install scikit-build && \
     pip3 install --no-cache-dir -r requirements.txt
 
 # Copy your FEniCS application code into the Docker container
