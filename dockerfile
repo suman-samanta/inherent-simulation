@@ -27,11 +27,11 @@ RUN apt-get update && \
 RUN pip3 install --upgrade pip
 
 # Install FEniCS dependencies (specific versions)
-RUN pip3 install fenics-dijitso==2019.2.0.dev0 \
-    fenics-dolfin==2019.2.0.dev0 \
-    fenics-ffc==2019.2.0.dev0 \
-    fenics-fiat==2019.2.0.dev0 \
-    fenics-ufl==2019.2.0.dev0
+RUN pip3 install fenics-dijitso==2019.1.0 \
+    fenics-dolfin==2019.1.0 \
+    fenics-ffc==2019.1.0 \
+    fenics-fiat==2019.1.0 \
+    fenics-ufl==2019.1.0
 
 # If you have additional Python dependencies in requirements.txt, install them
 COPY requirements.txt /app/
