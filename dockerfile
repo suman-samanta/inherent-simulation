@@ -10,7 +10,7 @@ USER root
 # Create necessary directories and set permissions
 RUN mkdir -p /var/lib/apt/lists/partial && chmod -R 777 /var/lib/apt/lists
 
-# Update system and install system dependencies
+# Update system and install system dependencies including tools for building from source
 RUN apt-get update && \
     apt-get install -y \
     build-essential \
@@ -26,9 +26,18 @@ RUN apt-get update && \
     liblapack-dev \
     gdal-bin \
     libgdal-dev \
-    cmake && \
-    apt-get clean && \
+    cmake \
+    swig \
+    doxygen \
+    gcc-5 \
+    g++-5 \
+    python3.6-dev \
+    && apt-get clean && \
     rm -rf /var/lib/apt/lists/*
+
+# Install Python 3.6 (if not available by default)
+RUN apt-get update && \
+    apt-get install -y python3.6 python3.6-dev python3.6-distutils
 
 # Set GDAL environment variables
 ENV CPLUS_INCLUDE_PATH=/usr/include/gdal
@@ -37,16 +46,27 @@ ENV C_INCLUDE_PATH=/usr/include/gdal
 # Set the working directory
 WORKDIR /app
 
-# Upgrade pip & setuptools, and install ideep4py
-RUN pip3 install --upgrade pip setuptools && \
-    pip3 install ideep4py
+# Upgrade pip and setuptools
+RUN pip3 install --upgrade pip setuptools
 
-# Copy your app and requirements
+# Install numpy (as per the requirements)
+RUN pip3 install numpy==1.13
+
+# Install ideep4py from source
+RUN git clone https://github.com/IntelPython/ideep4py.git /app/ideep4py && \
+    cd /app/ideep4py && \
+    git submodule update --init && \
+    mkdir build && cd build && \
+    cmake .. && \
+    cd ../python && \
+    python3 setup.py install
+
+# Install other Python dependencies from requirements.txt
 COPY requirements.txt /app/
-COPY . /app
-
-# Install Python dependencies
 RUN pip3 install --no-cache-dir -r requirements.txt
 
-# Set default command
+# Copy your FEniCS application code into the Docker container
+COPY . /app
+
+# Set the default command to run when starting the container
 CMD ["python3", "my_inherentstrain_draft.py"]
