@@ -4,9 +4,14 @@ FROM stnb/fenics:latest
 # Avoid interactive prompts during installation
 ENV DEBIAN_FRONTEND=noninteractive
 
+# Ensure running as root to avoid permission issues
+USER root
+
+# Create necessary directories and set permissions
+RUN mkdir -p /var/lib/apt/lists/partial && chmod -R 777 /var/lib/apt/lists
+
 # Update system and install additional system dependencies that might be necessary
-RUN apt-get update && \
-    apt-get install -y \
+RUN apt-get update && apt-get install -y \
     build-essential \
     libopenmpi-dev \
     libeigen3-dev \
@@ -27,7 +32,7 @@ WORKDIR /app
 # Copy the requirements.txt file to the container
 COPY requirements.txt /app/
 
-# Install Python dependencies from requirements.txt
+# Upgrade pip and install Python dependencies from requirements.txt
 RUN pip3 install --upgrade pip && \
     pip3 install --no-cache-dir -r requirements.txt
 
