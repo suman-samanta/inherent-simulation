@@ -1,56 +1,36 @@
-# Use the official Ubuntu base image
-FROM ubuntu:20.04
+# Use the custom FEniCS Docker image
+FROM stnb/fenics:latest
 
 # Avoid interactive prompts during installation
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install additional system dependencies required for FEniCS and Dolfin
-RUN apt-get update && \
-    apt-get install -y \
-    software-properties-common \
-    wget \
-    python3-pip \
-    python3-dev \
-    libboost-dev \
+# Update system and install additional system dependencies that might be necessary
+RUN apt-get update && apt-get install -y \
+    build-essential \
     libopenmpi-dev \
-    libmshr-dev \
-    libscotch-dev \
+    libeigen3-dev \
+    wget \
+    curl \
     git \
-    cmake \
-    petsc-dev \
-    gfortran \
+    python3-dev \
+    python3-pip \
+    libhdf5-serial-dev \
     libblas-dev \
     liblapack-dev \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Miniconda to manage Python and packages
-RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /miniconda.sh && \
-    bash /miniconda.sh -b -p /miniconda && \
-    rm /miniconda.sh
-
-# Add Conda to path
-ENV PATH="/miniconda/bin:${PATH}"
-
-# Update Conda and install FEniCS using Conda
-RUN conda update -n base -c defaults conda && \
-    conda install -c conda-forge fenics && \
-    conda clean -afy
-
-# If you have additional Python dependencies in requirements.txt, install them
-COPY requirements.txt /app/
-RUN pip3 install --no-cache-dir -r /app/requirements.txt
-
-# Install sympy (required for some parts of FEniCS)
-RUN pip3 install --no-cache-dir --upgrade sympy
-
-# Install spaCy model (if you have en-core-web-sm in requirements)
-RUN python3 -m spacy download en-core-web-sm
-
-# Set the working directory to /app
+# Set the working directory in the Docker container
 WORKDIR /app
 
-# Copy the rest of your files to the container
+# Copy the requirements.txt file to the container
+COPY requirements.txt /app/
+
+# Install Python dependencies from requirements.txt
+RUN pip3 install --no-cache-dir -r requirements.txt
+
+# Copy your FEniCS application code into the Docker container
 COPY . /app
 
-# Default command to run the Python script (adjust this based on your entry script)
+# Set the default command to run when starting the container
 CMD ["python3", "my_inherentstrain_draft.py"]
