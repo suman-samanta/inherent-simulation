@@ -10,16 +10,16 @@ USER root
 # Create necessary directories and set permissions
 RUN mkdir -p /var/lib/apt/lists/partial && chmod -R 777 /var/lib/apt/lists
 
-# Update system and install system dependencies including tools for building from source
+# Install required system dependencies for building from source
 RUN apt-get update && \
     apt-get install -y \
+    software-properties-common \
     build-essential \
     libopenmpi-dev \
     libeigen3-dev \
     wget \
     curl \
     git \
-    python3-dev \
     python3-pip \
     libhdf5-serial-dev \
     libblas-dev \
@@ -29,14 +29,15 @@ RUN apt-get update && \
     cmake \
     swig \
     doxygen \
-    gcc-5 \
-    g++-5 \
+    gcc \
+    g++ \
     python3.6-dev \
     && apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Install Python 3.6 (if not available by default)
-RUN apt-get update && \
+# Install Python 3.6 from deadsnakes repository (required for Python 3.6)
+RUN add-apt-repository ppa:deadsnakes/ppa && \
+    apt-get update && \
     apt-get install -y python3.6 python3.6-dev python3.6-distutils
 
 # Set GDAL environment variables
@@ -49,7 +50,7 @@ WORKDIR /app
 # Upgrade pip and setuptools
 RUN pip3 install --upgrade pip setuptools
 
-# Install numpy (as per the requirements)
+# Install numpy (specific version required)
 RUN pip3 install numpy==1.13
 
 # Install ideep4py from source
