@@ -23,15 +23,18 @@ RUN apt-get update && \
     liblapack-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Upgrade pip
-RUN pip3 install --upgrade pip
+# Install Miniconda to manage Python and packages
+RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /miniconda.sh && \
+    bash /miniconda.sh -b -p /miniconda && \
+    rm /miniconda.sh
 
-# Install FEniCS dependencies (specific versions)
-RUN pip3 install fenics-dijitso==2019.1.0 \
-    fenics-dolfin==2019.1.0 \
-    fenics-ffc==2019.1.0 \
-    fenics-fiat==2019.1.0 \
-    fenics-ufl==2019.1.0
+# Add Conda to path
+ENV PATH="/miniconda/bin:${PATH}"
+
+# Update Conda and install FEniCS using Conda
+RUN conda update -n base -c defaults conda && \
+    conda install -c conda-forge fenics && \
+    conda clean -afy
 
 # If you have additional Python dependencies in requirements.txt, install them
 COPY requirements.txt /app/
