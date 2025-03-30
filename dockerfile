@@ -10,7 +10,7 @@ USER root
 # Create necessary directories and set permissions
 RUN mkdir -p /var/lib/apt/lists/partial && chmod -R 777 /var/lib/apt/lists
 
-# Install required system dependencies for building from source
+# Install required system dependencies
 RUN apt-get update && \
     apt-get install -y \
     software-properties-common \
@@ -30,15 +30,14 @@ RUN apt-get update && \
     swig \
     doxygen \
     gcc \
-    g++ \
-    python3.6-dev \
-    && apt-get clean && \
+    g++ && \
+    apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Install Python 3.6 from deadsnakes repository (required for Python 3.6)
+# Add deadsnakes repository to install Python 3.6
 RUN add-apt-repository ppa:deadsnakes/ppa && \
     apt-get update && \
-    apt-get install -y python3.6 python3.6-dev python3.6-distutils
+    apt-get install -y python3.6
 
 # Set GDAL environment variables
 ENV CPLUS_INCLUDE_PATH=/usr/include/gdal
