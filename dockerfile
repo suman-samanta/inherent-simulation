@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Ensure running as root to avoid permission issues
 USER root
 
-# Update system and install system dependencies including CMake and Python 3.8 dependencies
+# Update system and install system dependencies including CMake, Python 3.8 dependencies, and screen-resolution-extra
 RUN apt-get update && \
     apt-get install -y \
     build-essential \
@@ -27,7 +27,9 @@ RUN apt-get update && \
     cmake \
     python3-mshr \
     libcairo2-dev \
-    libgirepository1.0-dev && \ 
+    libgirepository1.0-dev \
+    pkg-config \
+    screen-resolution-extra && \ 
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
