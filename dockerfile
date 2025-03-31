@@ -38,17 +38,6 @@ ENV C_INCLUDE_PATH=/usr/include/gdal
 # Set the working directory in the Docker container
 WORKDIR /app
 
-# Clone the ideep repository and initialize submodules
-RUN git clone --recursive https://github.com/intel/ideep.git /ideep
-
-
-# Set up the CMake build and ensure all paths are correct
-RUN cd /ideep/build && \
-    cmake .. -DCMAKE_INSTALL_PREFIX=/ideep/build -DCMAKE_BUILD_TYPE=Release
-
-# Install ideep4py from the repository
-RUN cd /ideep/python && \
-    python3 setup.py install
 
 # Copy the requirements.txt file to the container
 COPY requirements.txt /app/
