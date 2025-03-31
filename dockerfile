@@ -27,7 +27,8 @@ RUN apt-get update && \
     gdal-bin \
     libgdal-dev \
     libomp-dev \
-    cmake && \
+    cmake \
+    python3-mshr && \  # Install mshr via apt
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -48,7 +49,7 @@ RUN pip3 install --upgrade pip && \
 # Install jaxlib with CUDA support
 RUN pip3 install --upgrade "jaxlib==0.1.66+cuda110" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
 
-# Now install Python dependencies from requirements.txt
+# Now install Python dependencies from requirements.txt (after installing mshr)
 RUN pip3 install --no-cache-dir -r requirements.txt
 
 # Copy your FEniCS application code into the Docker container

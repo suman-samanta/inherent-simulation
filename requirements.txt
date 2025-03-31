@@ -199,7 +199,7 @@ moviepy==0.2.3.5
 mpi4py==2.0.0
 mpmath==1.2.1
 msgpack==1.0.2
-mshr==2019.2.0.dev0
+# mshr==2019.2.0.dev0
 multiprocess==0.70.12.2
 multitasking==0.0.9
 murmurhash==1.0.5
