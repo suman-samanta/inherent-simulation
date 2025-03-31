@@ -37,9 +37,14 @@ ENV C_INCLUDE_PATH=/usr/include/gdal
 # Set the working directory in the Docker container
 WORKDIR /app
 
-# Clone the ideep4py repository and install it
-RUN git clone https://github.com/intel/ideep.git /ideep && \
-    cd /ideep/python && \
+# Clone the ideep repository
+RUN git clone https://github.com/intel/ideep.git /ideep
+
+# Patch the setup.py to fix the 'platform.dist()' issue for Python 3.8+
+RUN sed -i 's/from platform import system, dist/from platform import system/' /ideep/python/setup.py
+
+# Install ideep4py
+RUN cd /ideep/python && \
     python3 setup.py install
 
 # Copy the requirements.txt file to the container
