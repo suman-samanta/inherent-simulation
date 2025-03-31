@@ -10,7 +10,7 @@ USER root
 # Create necessary directories and set permissions
 RUN mkdir -p /var/lib/apt/lists/partial && chmod -R 777 /var/lib/apt/lists
 
-# Update system and install system dependencies including GDAL and ideep4py dependencies
+# Update system and install system dependencies including CMake and Python 3.8 dependencies
 RUN apt-get update && \
     apt-get install -y \
     build-essential \
@@ -19,14 +19,15 @@ RUN apt-get update && \
     wget \
     curl \
     git \
-    python3-dev \
+    python3.8-dev \
     python3-pip \
     libhdf5-serial-dev \
     libblas-dev \
     liblapack-dev \
     gdal-bin \
     libgdal-dev \
-    libomp-dev && \
+    libomp-dev \
+    cmake && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -40,17 +41,16 @@ WORKDIR /app
 # Clone the ideep repository
 RUN git clone https://github.com/intel/ideep.git /ideep
 
-# Patch the setup.py to replace platform.dist() with a Python 3.8+ compatible solution
-RUN sed -i "s/from platform import system, dist/from platform import system/" /ideep/python/setup.py && \
-    sed -i 's/os_dist = dist()/os_dist = ("", "")/' /ideep/python/setup.py
+# Create the build directory
+RUN mkdir -p /ideep/build
 
-# Create the build directory and set it up properly
-RUN mkdir -p /ideep/build && \
-    mkdir -p /ideep/python/ideep4py && \
-    cd /ideep/python/ideep4py && \
-    cmake -DCMAKE_INSTALL_PREFIX=/ideep/build -DCMAKE_BUILD_TYPE=Release /ideep/python
+# Set up the CMake build (correct build path)
+RUN cd /ideep && \
+    mkdir build && \
+    cd build && \
+    cmake .. -DCMAKE_INSTALL_PREFIX=/ideep/build -DCMAKE_BUILD_TYPE=Release
 
-# Install ideep4py
+# Install ideep4py from the repository
 RUN cd /ideep/python && \
     python3 setup.py install
 
