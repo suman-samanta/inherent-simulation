@@ -26,8 +26,8 @@ RUN apt-get update && \
     libomp-dev \
     cmake \
     python3-mshr \
-    libcairo2-dev \ 
-    libgirepository1.0-dev && \  
+    libcairo2-dev \
+    libgirepository1.0-dev && \ 
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
