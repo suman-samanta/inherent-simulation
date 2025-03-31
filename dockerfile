@@ -10,7 +10,7 @@ USER root
 # Create necessary directories and set permissions
 RUN mkdir -p /var/lib/apt/lists/partial && chmod -R 777 /var/lib/apt/lists
 
-# Update system and install system dependencies including GDAL
+# Update system and install system dependencies including GDAL and ideep4py dependencies
 RUN apt-get update && \
     apt-get install -y \
     build-essential \
@@ -25,7 +25,8 @@ RUN apt-get update && \
     libblas-dev \
     liblapack-dev \
     gdal-bin \
-    libgdal-dev && \
+    libgdal-dev \
+    libomp-dev && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -39,7 +40,7 @@ WORKDIR /app
 # Copy the requirements.txt file to the container
 COPY requirements.txt /app/
 
-# Upgrade pip, install scikit-build and install other Python dependencies
+# Upgrade pip, install scikit-build, and install Python dependencies
 RUN pip3 install --upgrade pip && \
     pip3 install scikit-build && \
     pip3 install --no-cache-dir -r requirements.txt
