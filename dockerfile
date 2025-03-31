@@ -38,14 +38,18 @@ ENV C_INCLUDE_PATH=/usr/include/gdal
 # Set the working directory in the Docker container
 WORKDIR /app
 
-
 # Copy the requirements.txt file to the container
 COPY requirements.txt /app/
 
-# Upgrade pip, install scikit-build, and install Python dependencies
+# Upgrade pip and install scikit-build first
 RUN pip3 install --upgrade pip && \
-    pip3 install scikit-build && \
-    pip3 install --no-cache-dir -r requirements.txt
+    pip3 install scikit-build
+
+# Install jaxlib with CUDA support
+RUN pip3 install --upgrade "jaxlib==0.1.66+cuda110" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
+
+# Now install Python dependencies from requirements.txt
+RUN pip3 install --no-cache-dir -r requirements.txt
 
 # Copy your FEniCS application code into the Docker container
 COPY . /app
