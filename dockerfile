@@ -25,7 +25,9 @@ RUN apt-get update && \
     libgdal-dev \
     libomp-dev \
     cmake \
-    python3-mshr && \
+    python3-mshr \
+    libcairo2-dev \ 
+    libgirepository1.0-dev && \  
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
