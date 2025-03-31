@@ -44,6 +44,9 @@ RUN git clone https://github.com/intel/ideep.git /ideep
 RUN sed -i "s/from platform import system, dist/from platform import system/" /ideep/python/setup.py && \
     sed -i 's/os_dist = dist()/os_dist = ("", "")/' /ideep/python/setup.py
 
+# Create the build directory
+RUN mkdir -p /ideep/build
+
 # Install ideep4py
 RUN cd /ideep/python && \
     python3 setup.py install
