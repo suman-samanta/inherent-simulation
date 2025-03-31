@@ -46,7 +46,6 @@ RUN mkdir -p /ideep/build
 
 # Set up the CMake build (correct build path)
 RUN cd /ideep && \
-    mkdir build && \
     cd build && \
     cmake .. -DCMAKE_INSTALL_PREFIX=/ideep/build -DCMAKE_BUILD_TYPE=Release
 
