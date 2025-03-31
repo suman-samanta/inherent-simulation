@@ -1,4 +1,5 @@
-version: '3'
+version: '3.8'  # Use version 3.8 for better compatibility
+
 services:
   fenics_sim:
     build: .
@@ -9,3 +10,5 @@ services:
     tty: true
     ports:
       - "8040:8040"  # Optional: expose ports if needed
+    environment:
+      - DEBIAN_FRONTEND=noninteractive  # Ensure non-interactive mode

@@ -7,9 +7,6 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Ensure running as root to avoid permission issues
 USER root
 
-# Create necessary directories and set permissions
-RUN mkdir -p /var/lib/apt/lists/partial && chmod -R 777 /var/lib/apt/lists
-
 # Update system and install system dependencies including CMake and Python 3.8 dependencies
 RUN apt-get update && \
     apt-get install -y \
@@ -28,7 +25,7 @@ RUN apt-get update && \
     libgdal-dev \
     libomp-dev \
     cmake \
-    python3-mshr && \  # Install mshr via apt
+    python3-mshr && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
