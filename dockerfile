@@ -44,8 +44,11 @@ RUN git clone https://github.com/intel/ideep.git /ideep
 RUN sed -i "s/from platform import system, dist/from platform import system/" /ideep/python/setup.py && \
     sed -i 's/os_dist = dist()/os_dist = ("", "")/' /ideep/python/setup.py
 
-# Create the build directory
-RUN mkdir -p /ideep/build
+# Create the build directory and set it up properly
+RUN mkdir -p /ideep/build && \
+    mkdir -p /ideep/python/ideep4py && \
+    cd /ideep/python/ideep4py && \
+    cmake -DCMAKE_INSTALL_PREFIX=/ideep/build -DCMAKE_BUILD_TYPE=Release /ideep/python
 
 # Install ideep4py
 RUN cd /ideep/python && \
